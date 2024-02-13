@@ -2,10 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import Linkout from "linkout-scraper";
-import puppeteer from 'puppeteer';
+import puppeteer, { DeviceRequestPrompt, Page } from 'puppeteer';
 
-async function scrapeProfileData(page) {
-  var profile = {
+async function scrapeProfileData(page: Page) {
+  const profile: Record<string,string | (Record<string, string | undefined> | null)[]> = {
     url: page.url(),
   }
   try {
@@ -17,12 +17,12 @@ async function scrapeProfileData(page) {
       const titleElement = document.querySelector(
         ".pv-text-details__about-this-profile-entrypoint"
       );
-      const h1Element = titleElement.querySelector("h1");
+      const h1Element = titleElement?.querySelector("h1");
       
       if(!h1Element) {
         return null
       }
-      return h1Element.textContent.trim();
+      return h1Element.textContent?.trim();
     });
 
     if(fullName){
@@ -40,17 +40,17 @@ async function scrapeProfileData(page) {
 
     const summary = await page.evaluate(() => {
       const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
-      const elemento = elements.find(span => {
-        return span.textContent.includes("Acerca de");
+      const element = elements.find(span => {
+        return span.textContent?.includes("Acerca de");
       });
       
-      if(elemento){
-        const parentDiv = elemento.parentElement.parentElement.parentElement.parentElement.parentElement;
-        const span = parentDiv.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
+      if(element){
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+        const span = parentDiv?.nextElementSibling?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild;
         if (!span) {
           return null;
         }
-        const summary = span.textContent.trim().replace(/\n\s*/g, '')
+        const summary = span.textContent?.trim().replace(/\n\s*/g, '')
         return summary;
       } else {
         return null;
@@ -63,13 +63,13 @@ async function scrapeProfileData(page) {
     
     const experiencia = await page.evaluate(() => {
       const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
-      const elemento = elements.find(span => {
-        return span.textContent.includes("Experiencia");
+      const element = elements.find(span => {
+        return span.textContent?.includes("Experiencia");
       });
       
-      if(elemento){
-        const parentDiv = elemento.parentElement.parentElement.parentElement.parentElement.parentElement;
-        const ul = parentDiv.nextElementSibling.firstElementChild;//UL
+      if(element){
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+        const ul = parentDiv?.nextElementSibling?.firstElementChild;//UL
         if (!ul || ul.tagName !== "UL") {
           return null;
         }
@@ -94,14 +94,14 @@ async function scrapeProfileData(page) {
           const locationXpath = './/span[3]/span[1]'; // Replace with actual Xpath for dates
         
           // Extract text content for each piece of data
-          const jobTitle = document.evaluate(jobTitleXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent.trim();
-          const company = document.evaluate(companyXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent.trim();
-          const dates = document.evaluate(datesXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent.trim();
-          const location = document.evaluate(locationXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent.trim();
-          const jobDescription = divjdElement?.textContent.trim()
+          const jobTitle = document.evaluate(jobTitleXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent?.trim();
+          const company = document.evaluate(companyXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent?.trim();
+          const dates = document.evaluate(datesXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent?.trim();
+          const location = document.evaluate(locationXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue?.textContent?.trim();
+          const jobDescription = divjdElement?.textContent?.trim()
         
           // Construct an object with the extracted data
-          const experienceObject = {}
+          const experienceObject: Record<string, string|undefined> = {}
 
           if(jobTitle) experienceObject.jobTitle = jobTitle;
           if(company) experienceObject.company = company;
@@ -123,13 +123,13 @@ async function scrapeProfileData(page) {
     
     const educacion = await page.evaluate(() => {
       const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
-      const elemento = elements.find(span => {
-        return span?.textContent.includes("Educación");
+      const element = elements.find(span => {
+        return span?.textContent?.includes("Educación");
       });
       
-      if(elemento){
-        const parentDiv = elemento.parentElement.parentElement.parentElement.parentElement.parentElement;
-        const ul = parentDiv.nextElementSibling.firstElementChild;//UL
+      if(element){
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+        const ul = parentDiv?.nextElementSibling?.firstElementChild;//UL
         if (!ul || ul.tagName !== "UL") {
           return null;
         }
@@ -138,15 +138,15 @@ async function scrapeProfileData(page) {
         return Array.from(liElements).map(li => {
           const edInstitution = './div/div[2]/div[1]/a/div/div/div/div/span[2]';
           var edInstitutionResult = document.evaluate(edInstitution, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-          var edInstitutionElement = edInstitutionResult.singleNodeValue?.textContent.trim();
+          var edInstitutionElement = edInstitutionResult.singleNodeValue?.textContent?.trim();
           
           const edCarreer = './div/div[2]/div[1]/a/span[1]/span[2]';
           var edCarreerResult = document.evaluate(edCarreer, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-          var edCarreerElement = edCarreerResult.singleNodeValue?.textContent.trim();
+          var edCarreerElement = edCarreerResult.singleNodeValue?.textContent?.trim();
           
           const edDate = './div/div[2]/div[1]/a/span[2]/span[2]';
           var edDateResult = document.evaluate(edDate, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-          var edDateElement = edDateResult.singleNodeValue?.textContent.trim();
+          var edDateElement = edDateResult.singleNodeValue?.textContent?.trim();
           
         
           if (!edInstitution) {
@@ -154,7 +154,7 @@ async function scrapeProfileData(page) {
           }
         
           // Construct an object with the extracted data
-          const educationObject = {}
+          const educationObject: Record<string,string> = {}
 
           if(edInstitutionElement) educationObject.edInstitutionElement = edInstitutionElement;
           if(edCarreerElement) educationObject.edCarreerElement = edCarreerElement;
@@ -184,7 +184,7 @@ async function scrapeProfileData(page) {
   }
 }
 
-export async function processPostRequest(prompt) {
+export async function processPostRequest(prompt: string) {
   try {
     const browser = await puppeteer.launch({
       headless: false,
