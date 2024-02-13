@@ -9,8 +9,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.2"
+    "dotenv": "^16.4.2",
+    "linkout-scraper": "^1.1.0",
+    "puppeteer": "^22.0.0"
   }
 }
