@@ -53,8 +53,13 @@ After completing the data, change the name from .default.env to .env.
 
 - Complete env file.
 - Run `node register-commands.js` only once.
-- Run `node ./src/index.js`
+- Run `npm start`
 
+# How to run in docker
+
+- Complete env file.
+- `docker build -t linkedin-scraper .`
+- `docker run --rm -t linkedin-scraper`
 
 # After obtaining the correct registration
 
