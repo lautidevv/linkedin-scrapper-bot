@@ -1,5 +1,5 @@
 {
-  "name": "scrapper-bot",
+  "name": "scraper-bot",
   "version": "1.0.0",
   "description": "El objetivo de este proyecto es hacer un bot que salude a los nuevos usuarios y los catalogue dentro del servidor de discord Lautidev a traves del scrapping de datos de las cuentas de linkedin de los nuevos usuarios.",
   "main": "src/index.js",
@@ -13,7 +13,6 @@
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.2",
-    "linkout-scraper": "^1.1.0",
     "puppeteer": "^22.0.0"
   }
 }
