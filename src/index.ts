@@ -36,7 +36,6 @@ client.on('interactionCreate', async (interaction: Interaction) => {
         const url = interaction.options.get('url')?.value as string;
 
         await interaction.deferReply();
-        //    await  interaction.reply("procesando...")
 
         console.log("url enviada por el usuario: ", url)
 
