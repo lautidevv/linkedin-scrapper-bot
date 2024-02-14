@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
-import Linkout from "linkout-scraper";
-import puppeteer, { DeviceRequestPrompt, Page } from 'puppeteer';
+// @ts-ignore
+import Linkout from "linkout-scraper"; //TODO: There are no types for this lib
+import puppeteer, { Page } from 'puppeteer';
 
 async function scrapeProfileData(page: Page) {
   const profile: Record<string,string | (Record<string, string | undefined> | null)[]> = {
