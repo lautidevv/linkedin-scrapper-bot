@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import Linkout from "linkout-scraper";
 import puppeteer from 'puppeteer';
 
 async function scrapeProfileData(page) {
@@ -186,30 +185,21 @@ async function scrapeProfileData(page) {
 
 export async function processPostRequest(prompt) {
   try {
-    const browser = await puppeteer.launch({
-      headless: false,
-    });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const cdp = await page.target().createCDPSession();
   
     await page.setViewport({
       width: 1920,
       height: 1024,
     });
+    
+    await page.setCookie({
+      name: "li_at",
+      value: process.env.COOKIE,
+      domain: ".linkedin.com",
+    }); 
   
-    // add ghost-cursor for maximum safety
-    await Linkout.tools.loadCursor(page, true);
-  
-    // Login with LinkedIn
-    await Linkout.services.login(page, cdp, {
-      cookie: process.env.COOKIE,
-    });
-  
-    // Visit a LinkedIn profile
-    await Linkout.services.visit(page, cdp, {
-      url: prompt,
-    });
-
+    await page.goto(prompt);
     
     const profileData = await scrapeProfileData(page);
 
