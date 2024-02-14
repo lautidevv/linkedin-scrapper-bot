@@ -1,5 +1,5 @@
 
-# linkedin scrapper bot
+# linkedin scraper bot
 
 The goal of this project is to make a bot that greets new users and catalogs them into the Lautidev discord server by scraping data from the linkedin accounts of new users.
 
