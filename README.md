@@ -58,8 +58,9 @@ After completing the data, change the name from .default.env to .env.
 - Run `npm run dev`
 
 ## Docker
-- Install Docker Desktop from [https://www.docker.com/products/docker-desktop/](here)
-- On the project run ````docker-compose up````
+- Complete env file
+- Install Docker Desktop from [here](https://www.docker.com/products/docker-desktop/)
+- On the project run `docker-compose up`
 
 
 # After obtaining the correct registration
