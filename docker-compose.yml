@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  scraper:
+    image: 'node:16-alpine'
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/home/scraper
+    working_dir: /home/scraper
+    command: npm run dev
+    environment:
+      NODE_ENV: development
