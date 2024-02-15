@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  scraper:
+    image: 'node:16-alpine'
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/home/scraper
+    working_dir: /home/scraper
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      # TOKEN: # bot token from https://discord.com/developers/applications
+      # COOKIE: # this cookie value must be get from here: https://www.youtube.com/watch?v=H8BVdAIyFJM
+      # GUILD_ID: # this is used to register commands in a server
+      # CLIENT_ID: # this is used to register commands in a server

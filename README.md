@@ -50,9 +50,16 @@ After completing the data, change the name from .default.env to .env.
 
 # How to run
 
+## Locally
+
 - Complete env file.
 - Run `node register-commands.js` only once.
-- Run `node ./src/index.js`
+- Run `npm run dev`
+
+## Docker
+- Complete env file
+- Install Docker Desktop from [here](https://www.docker.com/products/docker-desktop/)
+- On the project run `docker-compose up`
 
 
 # After obtaining the correct registration
