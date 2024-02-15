@@ -4,7 +4,10 @@
   "description": "El objetivo de este proyecto es hacer un bot que salude a los nuevos usuarios y los catalogue dentro del servidor de discord Lautidev a traves del scrapping de datos de las cuentas de linkedin de los nuevos usuarios.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node ./src/index.js"
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +18,12 @@
     "dotenv": "^16.4.2",
     "linkout-scraper": "^1.1.0",
     "puppeteer": "^22.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.17",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

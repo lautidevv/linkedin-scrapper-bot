@@ -6,7 +6,6 @@ The goal of this project is to make a bot that greets new users and catalogs the
 
 
 
-
 ## Principles
 
 

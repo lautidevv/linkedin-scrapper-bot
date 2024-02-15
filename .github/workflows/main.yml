@@ -1,0 +1,27 @@
+name: Git hooks Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build:
+  
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    
+    - uses: actions/setup-ruby@v1
+    - name: Send Webhook Notification
+      if: always()
+      env:
+        JOB_STATUS: ${{ job.status }}
+        WEBHOOK_URL: "https://discord.com/api/webhooks/1207505087014895678/AIE06NKrAjSwGtt4beuM0ZcqGBkRsp3Cqw2XfVt04cJxg19dOs_x9shSlz_S_89q7AI9"
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
+      run: |
+        git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git 
+        bash github-actions-discord-webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
