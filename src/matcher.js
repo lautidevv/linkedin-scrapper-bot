@@ -73,7 +73,7 @@ const RegexMatcher = {
  * @returns {string} - The sanitized string.
  */
 const sanitizeString = (str) => {
-  return str.replace(/[^\w\s#\+\.]/g, "").toLocaleLowerCase();
+  return str.replace(/[^\w\s#\+\.]/g, " ").toLocaleLowerCase();
 };
 
 /**
