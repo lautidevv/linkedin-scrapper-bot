@@ -17,7 +17,12 @@ const emojisIndex = {
     "fluter": "\:fluter:1207123046704357507",
     "git": "\:git:1207123169622884392",
     "github": "\:git:1207123169622884392",
-    "go": "\:go:1207126527318433852",
+    " go,": "\:go:1207126527318433852",
+    ",go,": "\:go:1207126527318433852",
+    ",go ": "\:go:1207126527318433852",
+    " go.": "\:go:1207126527318433852",
+    ",go.": "\:go:1207126527318433852",
+    ", go.": "\:go:1207126527318433852",
     "html5": "\:htmlycss:1207123334945447966",
     "html": "\:htmlycss:1207123334945447966",
     "css": "\:htmlycss:1207123334945447966",
@@ -75,6 +80,8 @@ client.on('ready',async (c) => {
 client.on('messageCreate', async (message) => {
     // si es un bot no responder
     if (message.author.bot) return
+
+   
 
     // Parsing logic to extract emojis and developer roles
     const extractedEmojis = [];
