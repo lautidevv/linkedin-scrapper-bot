@@ -82,7 +82,8 @@ client.on('messageCreate', async (message) => {
 
     // Loop through emojisIndex to find matching emojis
     for (const [key, value] of Object.entries(emojisIndex)) {
-        if (message.content.toLowerCase().includes(key)) {
+        const regex = new RegExp(`(?:^|\\s|,|;|\\.|!|\\?)${key}(?:$|\\s|,|;|\\.|!|\\?)`, 'i');
+        if (regex.test(message.content)) {
             console.log('encontre: ', key);
             extractedEmojis.push(key);
         }
