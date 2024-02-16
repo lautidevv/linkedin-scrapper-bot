@@ -1,25 +1,19 @@
 import dotenv from 'dotenv';
-dotenv.config();
 // @ts-ignore
 import Linkout from 'linkout-scraper'; //TODO: There are no types for this lib
 import puppeteer, { Page } from 'puppeteer';
 
+dotenv.config();
+
 async function scrapeProfileData(page: Page) {
-  const profile: Record<
-    string,
-    string | (Record<string, string | undefined> | null)[]
-  > = {
+  const profile: Record<string, string | (Record<string, string | undefined> | null)[]> = {
     url: page.url(),
   };
   try {
-    await page.waitForSelector(
-      '.pv-text-details__about-this-profile-entrypoint',
-    );
+    await page.waitForSelector('.pv-text-details__about-this-profile-entrypoint');
 
     const fullName = await page.evaluate(() => {
-      const titleElement = document.querySelector(
-        '.pv-text-details__about-this-profile-entrypoint',
-      );
+      const titleElement = document.querySelector('.pv-text-details__about-this-profile-entrypoint');
       const h1Element = titleElement?.querySelector('h1');
 
       if (!h1Element) {
@@ -42,25 +36,18 @@ async function scrapeProfileData(page: Page) {
     }
 
     const summary = await page.evaluate(() => {
-      const elements = Array.from(
-        document.querySelectorAll('h2>span[aria-hidden="true"]'),
-      );
+      const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
       const element = elements.find((span) => {
         return span.textContent?.includes('Acerca de');
       });
 
       if (element) {
-        const parentDiv =
-          element.parentElement?.parentElement?.parentElement?.parentElement
-            ?.parentElement;
-        const span =
-          parentDiv?.nextElementSibling?.firstElementChild?.firstElementChild
-            ?.firstElementChild?.firstElementChild;
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+        const span = parentDiv?.nextElementSibling?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild;
         if (!span) {
           return null;
         }
-        const summary = span.textContent?.trim().replace(/\n\s*/g, '');
-        return summary;
+        return span.textContent?.trim().replace(/\n\s*/g, '');
       } else {
         return null;
       }
@@ -71,17 +58,13 @@ async function scrapeProfileData(page: Page) {
     }
 
     const experiencia = await page.evaluate(() => {
-      const elements = Array.from(
-        document.querySelectorAll('h2>span[aria-hidden="true"]'),
-      );
+      const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
       const element = elements.find((span) => {
         return span.textContent?.includes('Experiencia');
       });
 
       if (element) {
-        const parentDiv =
-          element.parentElement?.parentElement?.parentElement?.parentElement
-            ?.parentElement;
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
         const ul = parentDiv?.nextElementSibling?.firstElementChild; //UL
         if (!ul || ul.tagName !== 'UL') {
           return null;
@@ -91,24 +74,11 @@ async function scrapeProfileData(page: Page) {
         return Array.from(liElements)
           .map((li) => {
             const divXpath = './div/div[2]/div[1]/div';
-            const divJobDescriptionXpath =
-              './div/div[2]/div[2]/ul/li[1]/div/ul/li/div/div/div/div/span[2]';
-            var divResult = document.evaluate(
-              divXpath,
-              li,
-              null,
-              XPathResult.FIRST_ORDERED_NODE_TYPE,
-              null,
-            );
-            var divElement = divResult.singleNodeValue;
-            var divjdResult = document.evaluate(
-              divJobDescriptionXpath,
-              li,
-              null,
-              XPathResult.FIRST_ORDERED_NODE_TYPE,
-              null,
-            );
-            var divjdElement = divjdResult.singleNodeValue;
+            const divJobDescriptionXpath = './div/div[2]/div[2]/ul/li[1]/div/ul/li/div/div/div/div/span[2]';
+            const divResult = document.evaluate(divXpath, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const divElement = divResult.singleNodeValue;
+            const divjdResult = document.evaluate(divJobDescriptionXpath, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const divjdElement = divjdResult.singleNodeValue;
 
             if (!divElement) {
               return null;
@@ -122,40 +92,16 @@ async function scrapeProfileData(page: Page) {
 
             // Extract text content for each piece of data
             const jobTitle = document
-              .evaluate(
-                jobTitleXpath,
-                divElement,
-                null,
-                XPathResult.FIRST_ORDERED_NODE_TYPE,
-                null,
-              )
+              .evaluate(jobTitleXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
               .singleNodeValue?.textContent?.trim();
             const company = document
-              .evaluate(
-                companyXpath,
-                divElement,
-                null,
-                XPathResult.FIRST_ORDERED_NODE_TYPE,
-                null,
-              )
+              .evaluate(companyXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
               .singleNodeValue?.textContent?.trim();
             const dates = document
-              .evaluate(
-                datesXpath,
-                divElement,
-                null,
-                XPathResult.FIRST_ORDERED_NODE_TYPE,
-                null,
-              )
+              .evaluate(datesXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
               .singleNodeValue?.textContent?.trim();
             const location = document
-              .evaluate(
-                locationXpath,
-                divElement,
-                null,
-                XPathResult.FIRST_ORDERED_NODE_TYPE,
-                null,
-              )
+              .evaluate(locationXpath, divElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
               .singleNodeValue?.textContent?.trim();
             const jobDescription = divjdElement?.textContent?.trim();
 
@@ -181,17 +127,13 @@ async function scrapeProfileData(page: Page) {
     }
 
     const educacion = await page.evaluate(() => {
-      const elements = Array.from(
-        document.querySelectorAll('h2>span[aria-hidden="true"]'),
-      );
+      const elements = Array.from(document.querySelectorAll('h2>span[aria-hidden="true"]'));
       const element = elements.find((span) => {
         return span?.textContent?.includes('Educación');
       });
 
       if (element) {
-        const parentDiv =
-          element.parentElement?.parentElement?.parentElement?.parentElement
-            ?.parentElement;
+        const parentDiv = element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
         const ul = parentDiv?.nextElementSibling?.firstElementChild; //UL
         if (!ul || ul.tagName !== 'UL') {
           return null;
@@ -200,39 +142,17 @@ async function scrapeProfileData(page: Page) {
         const liElements = ul.querySelectorAll('li');
         return Array.from(liElements)
           .map((li) => {
-            const edInstitution =
-              './div/div[2]/div[1]/a/div/div/div/div/span[2]';
-            var edInstitutionResult = document.evaluate(
-              edInstitution,
-              li,
-              null,
-              XPathResult.FIRST_ORDERED_NODE_TYPE,
-              null,
-            );
-            var edInstitutionElement =
-              edInstitutionResult.singleNodeValue?.textContent?.trim();
+            const edInstitution = './div/div[2]/div[1]/a/div/div/div/div/span[2]';
+            const edInstitutionResult = document.evaluate(edInstitution, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const edInstitutionElement = edInstitutionResult.singleNodeValue?.textContent?.trim();
 
             const edCarreer = './div/div[2]/div[1]/a/span[1]/span[2]';
-            var edCarreerResult = document.evaluate(
-              edCarreer,
-              li,
-              null,
-              XPathResult.FIRST_ORDERED_NODE_TYPE,
-              null,
-            );
-            var edCarreerElement =
-              edCarreerResult.singleNodeValue?.textContent?.trim();
+            const edCarreerResult = document.evaluate(edCarreer, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const edCarreerElement = edCarreerResult.singleNodeValue?.textContent?.trim();
 
             const edDate = './div/div[2]/div[1]/a/span[2]/span[2]';
-            var edDateResult = document.evaluate(
-              edDate,
-              li,
-              null,
-              XPathResult.FIRST_ORDERED_NODE_TYPE,
-              null,
-            );
-            var edDateElement =
-              edDateResult.singleNodeValue?.textContent?.trim();
+            const edDateResult = document.evaluate(edDate, li, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const edDateElement = edDateResult.singleNodeValue?.textContent?.trim();
 
             if (!edInstitution) {
               return null;
@@ -241,10 +161,8 @@ async function scrapeProfileData(page: Page) {
             // Construct an object with the extracted data
             const educationObject: Record<string, string> = {};
 
-            if (edInstitutionElement)
-              educationObject.edInstitutionElement = edInstitutionElement;
-            if (edCarreerElement)
-              educationObject.edCarreerElement = edCarreerElement;
+            if (edInstitutionElement) educationObject.edInstitutionElement = edInstitutionElement;
+            if (edCarreerElement) educationObject.edCarreerElement = edCarreerElement;
             if (edDateElement) educationObject.edDateElement = edDateElement;
 
             if (Object.keys(educationObject).length === 0) {
