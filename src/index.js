@@ -1,11 +1,12 @@
 require('dotenv').config()
+const { NewMatcher } = require('./matcher');
 
 // este es el indice de emojis que cree en base a los emojis del server de la comunidad
 // hay que tener en cuenta que los bots acceden a los emojis del servidor por su id.
 const emojisIndex = {
     ".net": "\:net:1207123156196786196",
-    "C#": "\:C_:1207123045303455784",
-    "C++": "\:C_:1207123045303455784",
+    "c#": "\:C_:1207123045303455784",
+    "c++": "\:C_:1207123045303455784",
     "QA": "\:QA:1207129410222948382",
     "adonisjs": "\:adonisjs:1207123167626403910",
     "android": "\:android:1207129412030570566",
@@ -67,29 +68,22 @@ const client = new Client({
 client.on('ready',async (c) => {
     console.log(`✅ ${c.user.tag} is online `)
     // ver de recuperar el listado de emojis del servi
-    // const emojiList = await fetch(`https://discord.com/api/v9/guilds/${process.env.GUILD_ID}/emojis`).then(res => res.json());
-    // console.log(emojiList)
+    // const emojisIndex = await fetch(`https://discord.com/api/v9/guilds/${process.env.GUILD_ID}/emojis`).then(res => res.json());
+    // console.log(emojisIndex)
 })
 
 // ante cada mensaje que se envie en el servidor:
 client.on('messageCreate', async (message) => {
     // si es un bot no responder
     if (message.author.bot) return
-
-   
-
-    // Parsing logic to extract emojis and developer roles
-    const extractedEmojis = [];
+    
+    const matcher = NewMatcher(message.content.length <= 500 ? "map" : "regex");
+    
+    let extractedEmojis = [];
     // const extractedRoles = [];
 
-    // Loop through emojisIndex to find matching emojis
-    for (const [key, value] of Object.entries(emojisIndex)) {
-        const regex = new RegExp(`(?:^|\\s|,|;|\\.|!|\\?)${key}(?:$|\\s|,|;|\\.|!|\\?)`, 'i');
-        if (regex.test(message.content)) {
-            console.log('encontre: ', key);
-            extractedEmojis.push(key);
-        }
-    }
+    extractedEmojis = matcher.GetEmojis(message.content, emojisIndex);
+    console.log(extractedEmojis)
 
     // Loop through rolesIndex to find matching roles
     // rolesIndex.forEach(role => {
@@ -109,7 +103,7 @@ client.on('messageCreate', async (message) => {
         for (const emoji of response.emojis) {
             console.log('reaccionando con: ', emojisIndex[emoji])
             await message.react(`\\${emojisIndex[emoji]}`);
-        }
+        } 
       } catch (error) {
         console.error(error); // Log any errors that occur during the reaction process
       }
