@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import pkg, { Interaction } from 'discord.js';
 import { processPostRequest } from './scrapeProfileData';
 const { Client, IntentsBitField, AttachmentBuilder } = pkg;
+
+dotenv.config();
 
 const client = new Client({
   intents: [
@@ -44,8 +45,7 @@ client.on('interactionCreate', async (interaction: Interaction) => {
         name: 'profile.json',
       });
       await interaction.editReply({
-        content:
-          'The response is too large to display here. Please see the file.',
+        content: 'The response is too large to display here. Please see the file.',
         files: [attachment],
       });
     }
@@ -53,4 +53,3 @@ client.on('interactionCreate', async (interaction: Interaction) => {
 });
 
 client.login(process.env.TOKEN);
-
