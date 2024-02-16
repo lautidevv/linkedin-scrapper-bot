@@ -85,4 +85,4 @@ const isLanguageWithSpecialChars = (key) => {
   return key === "c++" || key === "c#" || key === ".net";
 };
 
-module.exports = { NewMatcher };
+module.exports = { NewMatcher, MapMatcher, RegexMatcher };
